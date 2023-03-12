@@ -1,13 +1,25 @@
-import exp from 'constants';
 import express from 'express';
 import fs from 'fs';
+import morgan from 'morgan';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const app = express();
 
-//middleware
+// 1. middleware
+app.use(morgan('dev'))
+
 app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log('hi middleware');
+  next();
+});
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
 const port = 3000;
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -15,10 +27,12 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
-// common functionalities
+// 2. route handlers
 const getAllTours = (req, res) => {
+  console.log(req.requestTime);
   res.status(200).json({
     status: 'success',
+    requestTime: req.requestTime,
     data: {
       tours,
     },
@@ -105,6 +119,8 @@ const deleteTour = (req, res) => {
 // app.patch('/api/v1/tours/:id', updateTour);
 // app.delete('/api/v1/tours/:id', deleteTour);
 
+
+// 3. routes
 app.route('/api/v1/tours').get(getAllTours).post(createTour);
 app
   .route('/api/v1/tours/:id')
@@ -112,6 +128,8 @@ app
   .patch(updateTour)
   .delete(deleteTour);
 
+
+// 4. start server
 app.listen(port, () => {
   console.log('app running');
 });
