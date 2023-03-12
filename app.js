@@ -1,10 +1,9 @@
 import express from 'express';
 import morgan from 'morgan';
-import  tourRouter from './routes/tourRoutes.js';
-import  userRouter from './routes/userRoutes.js';
+import tourRouter from './routes/tourRoutes.js';
+import userRouter from './routes/userRoutes.js';
 
 const app = express();
-const port = 3000;
 
 // 1. middleware
 app.use(morgan('dev'));
@@ -27,7 +26,5 @@ app.use((req, res, next) => {
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
-// 4. start server
-app.listen(port, () => {
-  console.log('app running');
-});
+// 3. server
+export default app;

@@ -1,12 +1,11 @@
 import express from 'express';
-
-// route handlers
-const getAllUsers = (req, res) => {};
-const getUser = (res, req) => {};
-const createUser = (res, req) => {};
-const updateUser = (res, req) => {};
-const deleteUser = (res, req) => {};
-
+import {
+  getAllUsers,
+  getUser,
+  createUser,
+  updateUser,
+  deleteUser,
+} from '../controllers/userController.js';
 //create new router and save in a variable
 const router = express.Router();
 
