@@ -26,21 +26,45 @@ app.get('/api/v1/tours', (req, res) => {
   });
 });
 
+app.get('/api/v1/tours/:id', (req, res) => {
+  console.log(req.params);
+  const id = Number(req.params.id);
+  const tour = tours.find((x) => x.id === id);
+
+  if (!tour) {
+    res.status(404).json({
+      status: 'fail',
+      message: 'Invalid Id',
+    });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tours: tour,
+    },
+  });
+});
+
 app.post('/api/v1/tours', (req, res) => {
   const newId = tours[tours.length - 1].id + 1;
   const newTour = Object.assign({ id: newId }, req.body);
-  tours.push(newTour)
+  tours.push(newTour);
 
-  fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours),(err)=>{
-    res.status(201).send({
-        status:'success',
-        data:{
-            tours:newTour
-        }
-    })
-  })
+  fs.writeFile(
+    `${__dirname}/dev-data/data/tours-simple.json`,
+    JSON.stringify(tours),
+    (err) => {
+      res.status(201).send({
+        status: 'success',
+        data: {
+          tours: newTour,
+        },
+      });
+    }
+  );
   console.log(req.body);
-//   res.send('done');
+  //   res.send('done');
 });
 
 app.listen(port, () => {
