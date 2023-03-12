@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url';
 const app = express();
 
 // 1. middleware
-app.use(morgan('dev'))
+app.use(morgan('dev'));
 
 app.use(express.json());
 
@@ -109,25 +109,34 @@ const deleteTour = (req, res) => {
   });
 };
 
-// CRUD operations
-// good practice to specify api version like v1
-// (req,res) is route handler
+const getAllUsers = (req, res) => {};
+const getUser = (res, req) => {};
+const createUser = (res, req) => {};
+const updateUser = (res, req) => {};
+const deleteUser = (res, req) => {};
 
+// 3. routes
+// good practice to specify api version like v1
 // app.get('/api/v1/tours', getAllTours);
 // app.get('/api/v1/tours/:id', getTour);
 // app.post('/api/v1/tours', createTour);
 // app.patch('/api/v1/tours/:id', updateTour);
 // app.delete('/api/v1/tours/:id', deleteTour);
 
+//create new router and save in a variable
+const tourRouter = express.Router();
+const userRouter = express.Router();
 
-// 3. routes
-app.route('/api/v1/tours').get(getAllTours).post(createTour);
-app
-  .route('/api/v1/tours/:id')
-  .get(getTour)
-  .patch(updateTour)
-  .delete(deleteTour);
+// '/' is root of this '/api/v1/tours' url
+tourRouter.route('/').get(getAllTours).post(createTour);
+tourRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
+userRouter.route('/').get(getAllUsers).post(createUser);
+userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
+
+// connect new router to our application by using it as a middleware
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', tourRouter);
 
 // 4. start server
 app.listen(port, () => {
